@@ -13,7 +13,7 @@ struct barcode_scannerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BarcodeScannerView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
