@@ -23,8 +23,9 @@ final class ScannerVC: UIViewController {
     
     let captureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer?
-    
     weak var scannerDelegate: ScannerVCDelegate?
+    
+    private let sessionQueue = DispatchQueue(label: "scanner.session.queue")
     
     init(scannerDelegate: ScannerVCDelegate) {
         super.init(nibName: nil, bundle: nil)
@@ -51,49 +52,65 @@ final class ScannerVC: UIViewController {
     }
     
     private func setupCaptureSession() {
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
-            scannerDelegate?.didSurface(error: .invalidDeviceInput)
-            return
-        }
-        
-        let videoInput: AVCaptureDeviceInput
-        
-        do {
-            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-        } catch {
-            scannerDelegate?.didSurface(error: .invalidDeviceInput)
-            return
-        }
-        
-        if captureSession.canAddInput(videoInput) {
-            captureSession.addInput(videoInput)
-        } else {
-            scannerDelegate?.didSurface(error: .invalidDeviceInput)
-            return
-        }
-        
-        let metaDataOutput = AVCaptureMetadataOutput()
-        
-        if captureSession.canAddOutput(metaDataOutput) {
-            captureSession.addOutput(metaDataOutput)
+        sessionQueue.async { [weak self] in
+            guard let self = self else { return }
             
-            metaDataOutput.setMetadataObjectsDelegate(self, queue: .main)
-            metaDataOutput.metadataObjectTypes = [.ean8, .ean13]
-        } else {
-            scannerDelegate?.didSurface(error: .invalidDeviceInput)
-            return
+            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+                DispatchQueue.main.async {
+                    self.scannerDelegate?.didSurface(error: .invalidDeviceInput)
+                }
+                return
+            }
+            
+            let videoInput: AVCaptureDeviceInput
+            
+            do {
+                videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+            } catch {
+                DispatchQueue.main.async {
+                    self.scannerDelegate?.didSurface(error: .invalidDeviceInput)
+                }
+                return
+            }
+            
+            if captureSession.canAddInput(videoInput) {
+                captureSession.addInput(videoInput)
+            } else {
+                DispatchQueue.main.async {
+                    self.scannerDelegate?.didSurface(error: .invalidDeviceInput)
+                }
+                return
+            }
+            
+            let metaDataOutput = AVCaptureMetadataOutput()
+            
+            if captureSession.canAddOutput(metaDataOutput) {
+                captureSession.addOutput(metaDataOutput)
+                
+                metaDataOutput.setMetadataObjectsDelegate(self, queue: .main)
+                metaDataOutput.metadataObjectTypes = [.ean8, .ean13]
+            } else {
+                DispatchQueue.main.async {
+                    self.scannerDelegate?.didSurface(error: .invalidDeviceInput)
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+                self.previewLayer?.videoGravity = .resizeAspectFill
+                if let previewLayer = self.previewLayer {
+                    self.view.layer.addSublayer(previewLayer)
+                    previewLayer.frame = self.view.layer.bounds
+                }
+            }
+            
+            captureSession.startRunning()
+            
         }
-        
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        
-        guard let previewLayer = previewLayer else { return }
-        previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
-        
-        captureSession.startRunning()
-        
     }
 }
+
 
 extension ScannerVC: AVCaptureMetadataOutputObjectsDelegate {
     
@@ -119,5 +136,5 @@ extension ScannerVC: AVCaptureMetadataOutputObjectsDelegate {
     }
 }
 
-        
-        
+
+
