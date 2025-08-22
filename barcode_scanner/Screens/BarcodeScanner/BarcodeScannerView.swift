@@ -14,7 +14,7 @@ struct BarcodeScannerView: View {
     var body: some View {
         NavigationView {
             VStack {
-                ScannerView(scannedCode: $viewModel.scannedCode, alertItem: $viewModel.alertItem)
+                ScannerView(scannedCode: $viewModel.scannedCode, error: $viewModel.error)
                     .frame(maxWidth: .infinity, maxHeight: 300)
                 
                 Spacer().frame(height: 60)
@@ -29,10 +29,12 @@ struct BarcodeScannerView: View {
                     .padding()
             }
             .navigationTitle("Barcode Scanner")
-            .alert(item: $viewModel.alertItem) { alertItem in
-                Alert(title: Text(alertItem.title),
-                          message: Text(alertItem.message),
-                          dismissButton: alertItem.dismissButton)
+            .alert(item: $viewModel.error) { error in
+                Alert(
+                    title: Text(error.title),
+                    message: Text(error.localizedDescription),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
     }

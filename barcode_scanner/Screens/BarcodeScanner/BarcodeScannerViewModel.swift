@@ -7,10 +7,11 @@
 
 import SwiftUI
 
+@MainActor
 final class BarcodeScannerViewModel: ObservableObject {
     
     @Published var scannedCode = ""
-    @Published var alertItem: AlertItem?
+    @Published var error: CameraError?
     
     var statusText: String {
         scannedCode.isEmpty ? "Not yet scanned" : scannedCode

@@ -8,9 +8,27 @@
 import UIKit
 import AVFoundation
 
-enum CameraError {
+enum CameraError: LocalizedError, Identifiable {
+    var id: String { title }
+    
     case invalidDeviceInput
     case invalidScanValue
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidDeviceInput:
+            return "Something went wrong while creating the video input. We are unable to scan barcodes."
+        case .invalidScanValue:
+            return "The value scanned is not valid. This app scans EAN-8 and EAN-13."
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .invalidDeviceInput: return "Invalid Device Input"
+        case .invalidScanValue:   return "Invalid Scan Type"
+        }
+    }
 }
 
 protocol ScannerVCDelegate: AnyObject {
@@ -39,6 +57,20 @@ final class ScannerVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCaptureSession()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        sessionQueue.async { [weak self] in
+            self?.captureSession.startRunning()
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        sessionQueue.async { [weak self] in
+            self?.captureSession.stopRunning()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -104,9 +136,6 @@ final class ScannerVC: UIViewController {
                     previewLayer.frame = self.view.layer.bounds
                 }
             }
-            
-            captureSession.startRunning()
-            
         }
     }
 }
