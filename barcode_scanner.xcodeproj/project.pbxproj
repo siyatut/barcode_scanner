@@ -29,12 +29,27 @@
 		526B2D5F2E5774F00051C185 /* barcode_scannerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = barcode_scannerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		526B2D442E5774EE0051C185 /* barcode_scanner */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = barcode_scanner;
-			sourceTree = "<group>";
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		52D8AE172E589F7100D0C11C /* Exceptions for "barcode_scanner" folder in "barcode_scanner" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				barcode_scanner.xcdatamodeld,
+			);
+			target = 526B2D412E5774EE0051C185 /* barcode_scanner */;
 		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		52D8AE182E589F7100D0C11C /* Exceptions for "barcode_scanner" folder in "Compile Sources" phase from "barcode_scanner" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 526B2D3E2E5774EE0051C185 /* Sources */;
+			membershipExceptions = (
+				barcode_scanner.xcdatamodeld,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
 		526B2D582E5774F00051C185 /* barcode_scannerTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = barcode_scannerTests;
@@ -43,6 +58,15 @@
 		526B2D622E5774F00051C185 /* barcode_scannerUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = barcode_scannerUITests;
+			sourceTree = "<group>";
+		};
+		52D8AE0D2E589F7100D0C11C /* barcode_scanner */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				52D8AE172E589F7100D0C11C /* Exceptions for "barcode_scanner" folder in "barcode_scanner" target */,
+				52D8AE182E589F7100D0C11C /* Exceptions for "barcode_scanner" folder in "Compile Sources" phase from "barcode_scanner" target */,
+			);
+			path = barcode_scanner;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +99,7 @@
 		526B2D392E5774EE0051C185 = {
 			isa = PBXGroup;
 			children = (
-				526B2D442E5774EE0051C185 /* barcode_scanner */,
+				52D8AE0D2E589F7100D0C11C /* barcode_scanner */,
 				526B2D582E5774F00051C185 /* barcode_scannerTests */,
 				526B2D622E5774F00051C185 /* barcode_scannerUITests */,
 				526B2D432E5774EE0051C185 /* Products */,
@@ -108,7 +132,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				526B2D442E5774EE0051C185 /* barcode_scanner */,
+				52D8AE0D2E589F7100D0C11C /* barcode_scanner */,
 			);
 			name = barcode_scanner;
 			packageProductDependencies = (
